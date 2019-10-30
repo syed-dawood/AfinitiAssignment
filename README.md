@@ -1,4 +1,4 @@
-# AIHiringAssignment
+# AfinitiAssignment
 
 This restaurant system made via _C# Web Api (.Net Framework 4.7.2), Angular (8) with Database in MSSQL_ allows the user to 
 - Add new ingredients
