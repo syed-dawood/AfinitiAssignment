@@ -1,0 +1,145 @@
+<div class="row">
+        <div class="col-8">
+                <div class="form-group">
+                        <label for="select-ing">Select Ingredients</label>
+                        <select id="select-ing" [(ngModel)]="SelectedValue" multiple class="form-control"
+                                (change)="UpdatePrice()">
+                                <option *ngFor="let ingredient of AllIngredients" [ngValue]="ingredient">
+                                        {{ingredient.Name}} -- {{ingredient.Price}}</option>
+                        </select>
+                        Total Price: {{Price}}
+                        <input [(ngModel)]="RecipeName" class="form-control" type="text" placeholder="Name of Recipe">
+                </div>
+                <p class="text-danger">{{RecipeErrors}}</p>
+                <p class="text-success">{{RecipeSucess}}</p>
+                <button class="btn btn-success" (click)="MakeRecipe()">Make Recipe</button>
+        </div>
+        <div class="col-4">
+                <div class="form-group">
+                        <label >Create or Update Ingredient</label>
+                        <br>
+                        <label for="Ingredient">Name</label>
+                        <input id="Ingredient" [(ngModel)]="Ingredient.Name" class="form-control" type="text"
+                                value="Ingredient.Name" (keypress)="ChangeIngredient()">
+                        <label for="IngredientPrice">Price</label>
+                        <input id="IngredientPrice" [(ngModel)]="Ingredient.Price" class="form-control" type="text"
+                                value="Ingredient.Price">
+                </div>
+                <p class="text-danger">{{IngredientErrors}}</p>
+                <p class="text-success">{{IngredientSuccess}}</p>
+                <div class="row m-0 p-0">
+                        <button class="" class="btn btn-success col"
+                                (click)="SubmitIngredient()">{{ CreateIngredient == true ? 'Create Ingredient' : 'Update Ingredient' }}</button>
+                        <button class="btn btn-danger offset-1 col-2" (click)="DeleteIngredient()"
+                                *ngIf="!CreateIngredient">X</button>
+                </div>
+        </div>
+</div>
+
+<!-- Intermediat Ingredient -->
+
+<div class="row pt-5">
+        <h2 class="col-12">Intermediat Ingredients</h2>
+        <div class="col-8">
+                <div class="form-group">
+                        <label>Select Intermediate Ingredient</label>
+                        <ul class="list-group">
+                                <li class="list-group-item" *ngFor="let item of InterIngredients">
+                                        {{item.MenuItem}} -- {{item.Price}}
+                                        <button class="btn btn-secondary float-right"
+                                                (click)="IntermediateIngredientDetails(item.Id)">Details</button>
+                                </li>
+                        </ul>
+                </div>
+
+        </div>
+        <div class="col-4" *ngIf="ShowInterIngredientDetails">
+                <p>Intermediat Ingredients Details</p>
+                <div class="form-group">
+                        <label for="Recipe">Name</label>
+                        <p id="Recipe" class="font-weight-bold">{{InterIngredientDetails?.Name}}</p>
+                        <label for="RecipePrice">Price</label>
+                        <p id="RecipePrice" class="font-weight-bold">{{InterIngredientDetails?.Price}}</p>
+                </div>
+                <label>Recipe Ingredients</label>
+                <br>
+                <div [hidden]="EditingInterIngredients">
+                        <span class="badge badge-primary m-2" *ngFor="let Id of InterIngredientDetails.ChildIngredients">
+                                {{MapIngredient(Id).Name}}</span>
+                                <br>
+                        <button class="btn btn-primary" (click)="EditInterIngredients()">
+                                Edit Intermediate Ingredients
+                        </button>
+                </div>
+
+                <div [hidden]="!EditingInterIngredients">
+                        <select  [(ngModel)]="NewInterIngredients" multiple
+                                class="form-control" (change)="RecalcualteInterIngredienPrice()">
+                                <option *ngFor="let ingredient of AllIngredients" [ngValue]="ingredient.Id">
+                                        {{ingredient.Name}} -- {{ingredient.Price}}</option>
+                        </select>
+                        <br>
+                       <p class="text-success">{{NewInterIngredientSuccess}}</p>
+                       <p class="text-danger">{{NewInterIngredientError}}</p>
+
+                        <button class="btn btn-success" (click)="SubmitNewInterIngredients()">Change Intermediate Ingredients</button>
+
+                </div>
+
+        </div>
+</div>
+
+
+
+
+<!-- Recipe Details -->
+<div class="row pt-5">
+        <h2 class="col-12">Recipes</h2>
+        <div class="col-8">
+                <div class="form-group">
+                        <label>Select Recipe</label>
+                        <ul class="list-group" id="select-recipe">
+                                <li class="list-group-item" *ngFor="let item of MenuItems">
+                                        {{item.MenuItem}} -- {{item.Price}}
+                                        <button class="btn btn-secondary float-right"
+                                                (click)="RecipeDetails(item.Id)">Details</button>
+                                </li>
+                        </ul>
+                </div>
+
+
+        </div>
+        <div class="col-4" *ngIf="ShowRecipeDetails">
+                <p>Recipe Details</p>
+                <div class="form-group">
+                        <label for="Recipe">Name</label>
+                        <p id="Recipe" class="font-weight-bold">{{MenuItemDetails.Name}}</p>
+                        <label for="RecipePrice">Price</label>
+                        <p id="RecipePrice" class="font-weight-bold">{{MenuItemDetails.Price}}</p>
+                </div>
+                <label>Recipe Ingredients</label>
+                <br>
+                <div [hidden]="EditingRecipe">
+                        <span class="badge badge-primary m-2" *ngFor="let Id of MenuItemDetails.ChildIngredients">
+                                {{MapIngredient(Id).Name}}</span>
+                                <br>
+                        <button class="btn btn-primary" (click)="EditRecipeIngredients()">
+                                Edit Recipe Ingredients
+                        </button>
+                </div>
+
+                <div [hidden]="!EditingRecipe">
+                        <select id="select-recipeIngredients" [(ngModel)]="NewRecipeIngredients" multiple
+                                class="form-control" (change)="RecalcualteRecipePrice()">
+                                <option *ngFor="let ingredient of AllIngredients" [ngValue]="ingredient.Id">
+                                        {{ingredient.Name}} -- {{ingredient.Price}}</option>
+                        </select>
+                        <br>
+                       <p class="text-success">{{NewRecipeSuccess}}</p>
+                       <p class="text-danger">{{NewRecipeError}}</p>
+
+                        <button class="btn btn-success" (click)="SubmitNewRecipeIngredients()">Change Recipe Ingredients</button>
+
+                </div>
+        </div>
+</div>
